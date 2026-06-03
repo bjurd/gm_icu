@@ -43,9 +43,9 @@ if CLIENT then
 
 	--- @return function, Player[], number
 	function player.Iterator()
-		if not PlayerCache then PlayerCache = player.GetAll() end
+		PlayerCache = player.GetAll() -- This owns performance sadly
 
-		local Cache = table.Copy(PlayerCache)
+		local Cache = PlayerCache -- table.Copy(PlayerCache)
 		local Count = #Cache
 
 		for i = Count, 1, -1 do
