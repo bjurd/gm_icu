@@ -6,10 +6,43 @@
 --- @field Buttons number
 --- @field Impulse number
 
---- @type table<Player, StoredCommand[]>
+--- @type table<Player, StoredCommand>
 local StoredMovement = {}
 
+--- @param Angle Angle
+--- @return Angle
+local function NormalizeViewAngles(Angle)
+	Angle.p = math.Clamp(math.NormalizeAngle(Angle.p), -89, 89)
+	Angle.y = math.NormalizeAngle(Angle.y)
+	Angle.r = 0
 
+	return Angle
+end
+
+--- @param Controller Player
+--- @param Target Player
+--- @param Command CUserCmd
+--- @return Angle
+local function ApplyControllerLook(Controller, Target, Command)
+	local ViewAngles = NormalizeViewAngles(Angle(Target:EyeAngles()))
+	local MouseX, MouseY = Command:GetMouseX(), Command:GetMouseY()
+
+	if MouseX ~= 0 or MouseY ~= 0 then
+		-- None of these cvars are userinfo so it always falls back to the default.
+		-- Drats!
+		local Sensitivity = tonumber(Controller:GetInfo("sensitivity")) or 3
+		local Yaw = tonumber(Controller:GetInfo("m_yaw")) or 0.022
+		local Pitch = tonumber(Controller:GetInfo("m_pitch")) or 0.022
+
+		ViewAngles.y = ViewAngles.y - MouseX * Yaw * Sensitivity
+		ViewAngles.p = math.Clamp(ViewAngles.p + MouseY * Pitch * Sensitivity, -89, 89)
+	end
+
+	Target:SetEyeAngles(ViewAngles)
+	Target:SetNWAngle("ICU:ViewAngles", ViewAngles)
+
+	return ViewAngles
+end
 
 --- @param Search string
 --- @return Player|boolean
@@ -34,6 +67,7 @@ local function ICU_Stop(Player)
 
 	if isentity(Target) and Target:IsValid() then
 		Target:SetNWEntity("ICU:Controller", NULL)
+		Target:SetNWAngle("ICU:ViewAngles", angle_zero)
 	end
 
 	Player:SetNWEntity("ICU:Target", NULL)
@@ -57,7 +91,8 @@ local function ICU_Start(Player, Target)
 	Player:Spectate(OBS_MODE_IN_EYE)
 	Player:SpectateEntity(Target)
 
-	StoredMovement[Player] = {}
+	StoredMovement[Player] = nil
+	Target:SetNWAngle("ICU:ViewAngles", Target:EyeAngles())
 end
 
 concommand.Add("icu_start", function(Player, _, Args, ArgStr)
@@ -93,23 +128,19 @@ hook.Add("StartCommand", "icu", function(Player, Command)
 	local Controller = Player:GetNWEntity("ICU:Controller")
 
 	if Target:IsValid() then -- Is a controller
-		local StoredCommands = StoredMovement[Player]
+		local ViewAngles = ApplyControllerLook(Player, Target, Command)
 
-		if not StoredCommands then
-			StoredCommands = {}
-			StoredMovement[Player] = StoredCommands
-		end
-
-		table.insert(StoredCommands, {
+		StoredMovement[Player] = {
 			ForwardMove = Command:GetForwardMove(),
 			SideMove = Command:GetSideMove(),
 			UpMove = Command:GetUpMove(),
-			ViewAngles = Command:GetViewAngles(),
+			ViewAngles = ViewAngles,
 			Buttons = Command:GetButtons(),
 			Impulse = Command:GetImpulse()
-		} --[[@as StoredCommand]] )
+		} --[[@as StoredCommand]]
 
-		print("Stored view ", Command:GetViewAngles())
+		Command:ClearButtons()
+		Command:ClearMovement()
 
 		return
 	end
@@ -118,21 +149,19 @@ hook.Add("StartCommand", "icu", function(Player, Command)
 		Command:ClearButtons()
 		Command:ClearMovement()
 
-		local StoredCommands = StoredMovement[Controller]
+		local StoredCommand = StoredMovement[Controller]
 
-		if StoredCommands and #StoredCommands > 0 then
-			local StoredCommand = table.remove(StoredCommands, 1) --[[@as StoredCommand]]
+		if StoredCommand then
+			local ViewAngles = StoredCommand.ViewAngles
 
 			Command:SetForwardMove(StoredCommand.ForwardMove)
 			Command:SetSideMove(StoredCommand.SideMove)
 			Command:SetUpMove(StoredCommand.UpMove)
-			Command:SetViewAngles(StoredCommand.ViewAngles)
+			Command:SetViewAngles(ViewAngles)
 			Command:SetButtons(StoredCommand.Buttons)
 			Command:SetImpulse(StoredCommand.Impulse)
 
-			Player:SetEyeAngles(StoredCommand.ViewAngles)
-
-			print("Loaded view ", StoredCommand.ViewAngles)
+			Player:SetEyeAngles(ViewAngles)
 		end
 
 		return
@@ -149,5 +178,14 @@ hook.Add("PlayerDisconnected", "icu", function(Player)
 
 	if Controller:IsValid() then
 		ICU_Stop(Controller)
+	end
+end)
+
+hook.Add("PlayerSay", "icu", function(Player, Message, IsTeam)
+	local Target = Player:GetNWEntity("ICU:Target")
+
+	if Target:IsValid() then
+		Target:Say(Message, IsTeam)
+		return ""
 	end
 end)
