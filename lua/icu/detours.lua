@@ -21,6 +21,17 @@ function _PLAYER:Nick()
 end
 
 if CLIENT then
+	_PLAYER._ofnSteamID = _PLAYER._ofnSteamID or _PLAYER.SteamID
+	_PLAYER._ofnSteamID64 = _PLAYER._ofnSteamID64 or _PLAYER.SteamID64
+
+	function _PLAYER:SteamID() -- Detouring these serverside would be bad news...
+		return self._ofnSteamID(self:IsICUControlling() and self:GetICUTarget() or self)
+	end
+
+	function _PLAYER:SteamID64()
+		return self._ofnSteamID64(self:IsICUControlling() and self:GetICUTarget() or self)
+	end
+
 	player._ofnGetAll = player._ofnGetAll or player.GetAll
 	player._ofnIterator = player._ofnIterator or player.Iterator
 
