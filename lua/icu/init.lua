@@ -15,6 +15,7 @@ AddCSLuaFile()
 --- @field Ammo2 number
 
 --- @class ICU
+--- @field IsForwardingMessage boolean
 icu = {}
 
 --- @type table<Player, StoredCommand[]>
@@ -235,5 +236,18 @@ function icu.ApplyTargetCommand(Target, Command)
 		Weapon:SetClip2(StoredCommand.Clip2)
 		Target:SetAmmo(StoredCommand.Ammo1, Weapon:GetPrimaryAmmoType())
 		Target:SetAmmo(StoredCommand.Ammo2, Weapon:GetSecondaryAmmoType())
+	end
+end
+
+--- @param Player Player
+--- @param Message string
+--- @param IsTeamChat boolean
+function icu.ForwardPlayerMessage(Player, Message, IsTeamChat)
+	if Player:IsICUControlling() then
+		local Target = Player:GetICUTarget()
+
+		icu.IsForwardingMessage = true
+			Target:Say(Message, IsTeamChat)
+		icu.IsForwardingMessage = false
 	end
 end
