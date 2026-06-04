@@ -64,7 +64,6 @@ hook.Add("InitPostEntity", "iControlU", function()
 		--- @diagnostic disable-next-line: inject-field
 		ULib.ucl._ofnQuery = ULib.ucl._ofnQuery or ULib.ucl.query
 
-		local QueryAccess = ULib.ucl._ofnQuery
 		ULib.ucl.query = function(Player, Access, Hide)
 			if Player:IsValid() and Player:IsICUTargeted() then -- Server console will be NULL
 				-- This uses a PlayerSay hook internally, not player_say, so it will run as the controller rather than the target depending on hook execution order.
@@ -77,9 +76,9 @@ hook.Add("InitPostEntity", "iControlU", function()
 				-- icu.IsForwardingMessage being `true` tells us that this is being called from PlayerSay, but that doesn't help much :(
 
 				local Controller = Player:GetICUController()
-				return QueryAccess(Controller, Access, Hide)
+				return ULib.ucl._ofnQuery(Controller, Access, Hide)
 			else
-				return QueryAccess(Player, Access, Hide)
+				return ULib.ucl._ofnQuery(Player, Access, Hide)
 			end
 		end
 	end
