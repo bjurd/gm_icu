@@ -217,25 +217,30 @@ function icu.ApplyTargetCommand(Target, Command)
 	-- Command:SetImpulse(StoredCommand.Impulse)
 
 	Target:SetEyeAngles(StoredCommand.ViewAngles)
-	Target:SetHealth(Controller:Health()) -- Death
-	Target:SetArmor(Controller:Armor())
 
-	local Weapon = Target:GetActiveWeapon()
+	if Target:Alive() then
+		Target:SetHealth(Controller:Health()) -- Death
+		Target:SetArmor(Controller:Armor())
 
-	if not Weapon:IsValid() or StoredCommand.Weapon ~= Weapon:GetClass() then
-		Target:StripWeapons()
+		local Weapon = Target:GetActiveWeapon()
 
-		Weapon = Target:Give(StoredCommand.Weapon)
-		Target:SelectWeapon(StoredCommand.Weapon)
-	end
+		if not Weapon:IsValid() or StoredCommand.Weapon ~= Weapon:GetClass() then
+			Target:StripWeapons()
 
-	if Weapon:IsValid() then
-		Weapon:SetNoDraw(true)
+			if StoredCommand.Weapon ~= "" then
+				Weapon = Target:Give(StoredCommand.Weapon)
+				Target:SelectWeapon(StoredCommand.Weapon)
+			end
+		end
 
-		Weapon:SetClip1(StoredCommand.Clip1)
-		Weapon:SetClip2(StoredCommand.Clip2)
-		Target:SetAmmo(StoredCommand.Ammo1, Weapon:GetPrimaryAmmoType())
-		Target:SetAmmo(StoredCommand.Ammo2, Weapon:GetSecondaryAmmoType())
+		if Weapon:IsValid() then
+			Weapon:SetNoDraw(true)
+
+			Weapon:SetClip1(StoredCommand.Clip1)
+			Weapon:SetClip2(StoredCommand.Clip2)
+			Target:SetAmmo(StoredCommand.Ammo1, Weapon:GetPrimaryAmmoType())
+			Target:SetAmmo(StoredCommand.Ammo2, Weapon:GetSecondaryAmmoType())
+		end
 	end
 end
 
