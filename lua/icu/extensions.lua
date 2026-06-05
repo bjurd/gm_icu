@@ -35,10 +35,10 @@ end
 
 --- @return boolean
 function _PLAYER:IsICUControlling()
-	return self:GetICUTarget():IsValid()
+	return self:GetICUTarget() ~= NULL
 end
 
 --- @return boolean
 function _PLAYER:IsICUTargeted()
-	return self:GetICUController():IsValid()
+	return self:GetICUController() ~= NULL
 end

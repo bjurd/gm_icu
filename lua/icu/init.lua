@@ -97,12 +97,12 @@ function icu.Start(Controller, Target)
 	icu.Stop(Controller)
 
 	if Target:IsICUTargeted() then
-		Controller:PrintMessageFmt(HUD_PRINTTALK, "%s is already being controlled by %s", Target:Nick(), Target:GetICUController():Nick())
+		Controller:PrintMessageFmt(HUD_PRINTTALK, "%s is already being controlled by %s", Target:Nick(), Target:GetICUController():_ofnNick())
 		return
 	end
 
 	if Target:IsICUControlling() then
-		Controller:PrintMessageFmt(HUD_PRINTTALK, "%s is currently controlling %s", Target:Nick(), Target:GetICUTarget():Nick())
+		Controller:PrintMessageFmt(HUD_PRINTTALK, "%s is currently controlling %s", Target:_ofnNick(), Target:GetICUTarget():Nick())
 		return -- No controller-ception! (It'd probably work fine)
 	end
 
@@ -135,6 +135,10 @@ function icu.Stop(Controller)
 		Target:SetEyeAngles(Controller:EyeAngles())
 
 		Controller:PrintMessageFmt(HUD_PRINTTALK, "No longer controlling %s", Target:Nick())
+	end
+
+	if not Controller:IsICUControlling() then
+		return
 	end
 
 	Controller:SetICUTarget(NULL)
