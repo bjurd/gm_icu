@@ -58,7 +58,6 @@ hook.Add("InitPostEntity", "iControlU", function()
 		--- @field ucl ucl
 		--- @field isValidSteamID fun(SteamID: string)
 		--- @field getPlyByID fun(SteamID: string): Player|nil
-
 		_G.ULib = ULib --[[@as ULib]]
 
 		--- @diagnostic disable-next-line: inject-field
