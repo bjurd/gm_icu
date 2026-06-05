@@ -42,8 +42,8 @@ _G.ulx = ulx --[[@as ulx]]
 function ulx.icu_start(Caller, Target, Stop)
 	if Stop then
 		if Caller:IsICUControlling() then
+			icu.Stop(Caller) -- Do this first so the log is right
 			ulx.fancyLogAdmin(Caller, "#A stopped controlling")
-			icu.Stop(Caller)
 		else
 			ULib.tsayError(Caller, "You're not controlling anyone!")
 		end
