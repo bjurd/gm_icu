@@ -57,7 +57,7 @@ function icu.FindPlayer(Search)
 
 		local Nick = string.lower(Player:Nick())
 
-		if string.find(Nick, Lower) then
+		if string.find(Nick, Lower, 1, true) then
 			return Player
 		end
 	end
