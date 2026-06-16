@@ -7,6 +7,7 @@ local _PLAYER = FindMetaTable("Player")
 _PLAYER._ofnName = _PLAYER._ofnName or _PLAYER.Name
 _PLAYER._ofnGetName = _PLAYER._ofnGetName or _PLAYER.GetName
 _PLAYER._ofnNick = _PLAYER._ofnNick or _PLAYER.Nick
+_PLAYER._ofnTeam = _PLAYER._ofnTeam or _PLAYER.Team
 
 function _PLAYER:Name()
 	return self._ofnName(self:IsICUControlling() and self:GetICUTarget() or self)
@@ -18,6 +19,10 @@ end
 
 function _PLAYER:Nick()
 	return self._ofnNick(self:IsICUControlling() and self:GetICUTarget() or self)
+end
+
+function _PLAYER:Team()
+	return self._ofnTeam(self:IsICUControlling() and self:GetICUTarget() or self)
 end
 
 if CLIENT then
