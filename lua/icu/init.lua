@@ -109,6 +109,10 @@ function icu.Start(Controller, Target)
 	Target:SetICUController(Controller)
 	icu.RemoveTarget(Target)
 
+	if not Controller:Alive() then
+		Controller:Spawn()
+	end
+
 	Controller:SetICUTarget(Target)
 	Controller:SetPos(Target:GetPos()) -- Go to
 	Controller:SetEyeAngles(Target:EyeAngles())
