@@ -80,4 +80,4 @@ icu:addParam({ type = ULib.cmds.PlayerArg })
 icu:addParam({ type = ULib.cmds.BoolArg, invisible = true })
 icu:defaultAccess(ULib.ACCESS_ADMIN)
 icu:help("Take control over a player")
-icu:setOpposite("ulx icu_stop", { nil, nil, true }) -- I would like this to be "ulx icu stop" or something but no can do
+icu:setOpposite("ulx icu_stop", { nil, false, true }) -- I would like this to be "ulx icu stop" or something but no can do
