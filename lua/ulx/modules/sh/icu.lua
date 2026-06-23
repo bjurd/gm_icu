@@ -20,6 +20,7 @@ concommand.Remove("icu_stop")
 --- @class ulx
 --- @field command fun(Category: string, Command: string, Callback: function, SayCommand: string|nil, HideSay: boolean|nil, NoSpace: boolean|nil, Unsafe: boolean|nil): ulx_Command
 --- @field fancyLogAdmin fun(Target: Player, Message: string, ...: any)
+--- @field logString fun(Message: string, LogToMain: boolean|nil)
 _G.ulx = ulx --[[@as ulx]]
 
 --- @class ULib_Command
@@ -81,3 +82,31 @@ icu:addParam({ type = ULib.cmds.BoolArg, invisible = true })
 icu:defaultAccess(ULib.ACCESS_ADMIN)
 icu:help("Take control over a player")
 icu:setOpposite("ulx icu_stop", { nil, true, true }) -- I would like this to be "ulx icu stop" or something but no can do
+
+
+
+timer.Create("iControlU:ULXLogControls", 10, 0, function()
+	local Message = "[iControlU]\n%d %s %s under control!\n"
+	local Controlling = 0
+
+	for _, Player in player.Iterator() do
+		if Player:IsICUControlling() then
+			local Target = Player:GetICUTarget()
+
+			Message = Message .. Player:_ofnNick() .. " -> " .. Target:_ofnNick() .. "\n"
+			Controlling = Controlling + 1
+		end
+	end
+
+	if Controlling > 0 then
+		Message = string.format(
+			Message,
+			Controlling,
+			Controlling == 1 and "player" or "players", -- Grammar is important!
+			Controlling == 1 and "is" or "are"
+		)
+
+		Message = Message:Trim()
+		ulx.logString(Message)
+	end
+end)
