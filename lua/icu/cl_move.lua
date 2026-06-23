@@ -18,12 +18,14 @@ hook.Add("CalcView", "iControlU", function(Player, Origin, Angles, FOV, ZNear, Z
 	if Player:IsICUTargeted() then
 		local Controller = Player:GetICUController()
 
-		local ControllerOrigin = Controller:GetPos()
-		local Offset = Controller:GetCurrentViewOffset()
+		if Controller:IsValid() then
+			local ControllerOrigin = Controller:GetPos()
+			local Offset = Controller:GetCurrentViewOffset()
 
-		ControllerOrigin:Add(Offset)
+			ControllerOrigin:Add(Offset)
 
-		Origin:Set(ControllerOrigin)
+			Origin:Set(ControllerOrigin)
+		end
 	end
 end)
 
@@ -31,12 +33,14 @@ hook.Add("CalcViewModelView", "iControlU", function(Weapon, ViewModel, Origin, A
 	if LocalPlayer():IsICUTargeted() then
 		local Controller = LocalPlayer():GetICUController()
 
-		local ControllerOrigin = Controller:GetPos()
-		local Offset = Controller:GetCurrentViewOffset()
+		if Controller:IsValid() then
+			local ControllerOrigin = Controller:GetPos()
+			local Offset = Controller:GetCurrentViewOffset()
 
-		ControllerOrigin:Add(Offset)
+			ControllerOrigin:Add(Offset)
 
-		return ControllerOrigin, BobAngles
+			return ControllerOrigin, BobAngles
+		end
 	end
 end)
 
