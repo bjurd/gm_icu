@@ -73,7 +73,7 @@ function icu.RemoveTarget(Target)
 		Target:Spawn() -- So things make a bit of sense when you begin controlling someone who's dead
 	end
 
-	Target:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+	Target:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 	Target:SetMoveType(MOVETYPE_NOCLIP)
 	Target:GodEnable()
 	Target:SetNoDraw(true)
