@@ -27,9 +27,16 @@ hook.Add("CanPlayerSuicide", "iControlU", function(Player)
 end)
 
 hook.Add("PlayerSpawn", "iControlU", function(Player)
-	if Player:IsICUTargeted() then
-		icu.RemoveTarget(Player)
-	elseif Player:IsICUControlling() then
-		icu.SetupController(Player, Player:GetICUTarget())
-	end
+	timer.Simple(0, function()
+		if not IsValid(Player) then
+			return
+		end
+
+		if Player:IsICUTargeted() then
+			icu.RemoveTarget(Player)
+		elseif Player:IsICUControlling() then
+			Player:ChatPrint("making you look like " .. Player:GetICUTarget():Nick())
+			icu.SetupController(Player, Player:GetICUTarget())
+		end
+	end)
 end)
