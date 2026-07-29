@@ -79,7 +79,7 @@ function icu.RemoveTarget(Target)
 	Target:SetNoDraw(true)
 	Target:DrawWorldModel(false)
 
-	Target.m_bICUAvoidPlayers = Target:GetAvoidPlayers()
+	Target.m_bICUAvoidPlayers = Target.m_bICUAvoidPlayers or Target:GetAvoidPlayers()
 	Target:SetAvoidPlayers(false)
 end
 
@@ -96,6 +96,21 @@ function icu.RestoreTarget(Target)
 	Target:Spawn()
 
 	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
+	Target.m_bICUAvoidPlayers = nil
+end
+
+--- @param Controller Player
+--- @param Target Player
+function icu.SetupController(Controller, Target)
+	-- Make them look the same
+	-- Except bodygroups, fuck that
+	Controller:SetModel(Target:GetModel() --[[@as string]])
+	Controller:SetSkin(Target:GetSkin())
+	Controller:SetWeaponColor(Target:GetWeaponColor())
+	Controller:SetPlayerColor(Target:GetPlayerColor())
+
+	Controller.m_bICUAvoidPlayers = Controller.m_bICUAvoidPlayers or Controller:GetAvoidPlayers()
+	Controller:SetAvoidPlayers(false)
 end
 
 --- @param Controller Player
@@ -124,15 +139,7 @@ function icu.Start(Controller, Target)
 	Controller:SetPos(Target:GetPos()) -- Go to
 	Controller:SetEyeAngles(Target:EyeAngles())
 
-	-- Make them look the same
-	-- Except bodygroups, fuck that
-	Controller:SetModel(Target:GetModel() --[[@as string]])
-	Controller:SetSkin(Target:GetSkin())
-	Controller:SetWeaponColor(Target:GetWeaponColor())
-	Controller:SetPlayerColor(Target:GetPlayerColor())
-
-	Controller.m_bICUAvoidPlayers = Controller:GetAvoidPlayers()
-	Controller:SetAvoidPlayers(false)
+	icu.SetupController(Controller, Target)
 
 	Controller:PrintMessageFmt(HUD_PRINTTALK, "Now controlling %s", Target:Nick())
 end
@@ -158,6 +165,7 @@ function icu.Stop(Controller)
 	Controller:SetICUTarget(NULL)
 	Controller:Spawn() -- The controller should probably go back to where they were when they started controlling
 	Controller:SetAvoidPlayers(Controller.m_bICUAvoidPlayers)
+	Controller.m_bICUAvoidPlayers = nil
 
 	-- In the Base and Sandbox gamemodes this will setup their
 	-- model, skin, bodygroups and colors. If you're using this

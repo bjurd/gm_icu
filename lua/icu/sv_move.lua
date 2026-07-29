@@ -25,3 +25,11 @@ hook.Add("CanPlayerSuicide", "iControlU", function(Player)
 		return false
 	end
 end)
+
+hook.Add("PlayerSpawn", "iControlU", function(Player)
+	if Player:IsICUTargeted() then
+		icu.RemoveTarget(Player)
+	elseif Player:IsICUControlling() then
+		icu.SetupController(Player, Player:GetICUTarget())
+	end
+end)
