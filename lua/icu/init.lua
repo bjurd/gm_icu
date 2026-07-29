@@ -78,6 +78,9 @@ function icu.RemoveTarget(Target)
 	Target:GodEnable()
 	Target:SetNoDraw(true)
 	Target:DrawWorldModel(false)
+
+	Target.m_bICUAvoidPlayers = Target:GetAvoidPlayers()
+	Target:SetAvoidPlayers(false)
 end
 
 --- @param Target Player
@@ -91,6 +94,8 @@ function icu.RestoreTarget(Target)
 	Target:StripWeapons()
 	Target:UnSpectate() -- Unused but doesn't hurt
 	Target:Spawn()
+
+	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
 end
 
 --- @param Controller Player
@@ -126,6 +131,9 @@ function icu.Start(Controller, Target)
 	Controller:SetWeaponColor(Target:GetWeaponColor())
 	Controller:SetPlayerColor(Target:GetPlayerColor())
 
+	Controller.m_bICUAvoidPlayers = Controller:GetAvoidPlayers()
+	Controller:SetAvoidPlayers(false)
+
 	Controller:PrintMessageFmt(HUD_PRINTTALK, "Now controlling %s", Target:Nick())
 end
 
@@ -149,6 +157,7 @@ function icu.Stop(Controller)
 
 	Controller:SetICUTarget(NULL)
 	Controller:Spawn() -- The controller should probably go back to where they were when they started controlling
+	Controller:SetAvoidPlayers(Controller.m_bICUAvoidPlayers)
 
 	-- In the Base and Sandbox gamemodes this will setup their
 	-- model, skin, bodygroups and colors. If you're using this

@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
 --- @class Player
+--- @field m_bICUAvoidPlayers boolean|nil
 local _PLAYER = FindMetaTable("Player")
 
 --- @param Type number
