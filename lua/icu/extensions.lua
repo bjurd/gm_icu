@@ -5,6 +5,8 @@ AddCSLuaFile()
 --- @field m_iICUFlags number|nil
 --- @field m_iICUEFlags number|nil
 --- @field m_iICUDebugOverlays number|nil
+--- @field m_vecICUOrigin Vector|nil Used for teleporting someone back to where they were before ICU
+--- @field m_angICUAngles Angle|nil
 local _PLAYER = FindMetaTable("Player")
 
 --- @param Type number
