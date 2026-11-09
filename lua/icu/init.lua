@@ -80,7 +80,14 @@ function icu.RemoveTarget(Target)
 	Target:DrawWorldModel(false)
 
 	Target.m_bICUAvoidPlayers = Target.m_bICUAvoidPlayers or Target:GetAvoidPlayers()
+	Target.m_iICUFlags = Target.m_iICUFlags or Target:GetFlags()
+	Target.m_iICUEFlags = Target.m_iICUEFlags or Target:GetEFlags()
+	Target.m_iICUDebugOverlays = Target.m_iICUDebugOverlays or Target:GetDebugOverlays()
+
 	Target:SetAvoidPlayers(false)
+	Target:AddFlags(bit.bnot(Target.m_iICUFlags)) -- WHY NO SetFlags???
+	Target:AddEFlags(bit.bnot(Target.m_iICUEFlags))
+	Target:SetDebugOverlays(0)
 end
 
 --- @param Target Player
@@ -96,7 +103,14 @@ function icu.RestoreTarget(Target)
 	Target:Spawn()
 
 	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
+	Target:AddFlags(Target.m_iICUFlags)
+	Target:AddEFlags(Target.m_iICUEFlags)
+	Target:SetDebugOverlays(Target.m_iICUDebugOverlays)
+
 	Target.m_bICUAvoidPlayers = nil
+	Target.m_iICUFlags = nil
+	Target.m_iICUEFlags = nil
+	Target.m_iICUDebugOverlays = nil
 end
 
 --- @param Controller Player
@@ -110,6 +124,10 @@ function icu.SetupController(Controller, Target)
 	Controller:SetPlayerColor(Target:GetPlayerColor())
 
 	Controller.m_bICUAvoidPlayers = Controller.m_bICUAvoidPlayers or Controller:GetAvoidPlayers()
+	Controller.m_iICUFlags = Controller.m_iICUFlags or Controller:GetFlags()
+	Controller.m_iICUEFlags = Controller.m_iICUEFlags or Controller:GetEFlags()
+	Controller.m_iICUDebugOverlays = Controller.m_iICUDebugOverlays or Controller:GetDebugOverlays()
+
 	Controller:SetAvoidPlayers(false)
 end
 
@@ -164,8 +182,16 @@ function icu.Stop(Controller)
 
 	Controller:SetICUTarget(NULL)
 	Controller:Spawn() -- The controller should probably go back to where they were when they started controlling
+
 	Controller:SetAvoidPlayers(Controller.m_bICUAvoidPlayers)
+	Controller:AddFlags(Controller.m_iICUFlags)
+	Controller:AddEFlags(Controller.m_iICUEFlags)
+	Controller:SetDebugOverlays(Controller.m_iICUDebugOverlays)
+
 	Controller.m_bICUAvoidPlayers = nil
+	Controller.m_iICUFlags = nil
+	Controller.m_iICUEFlags = nil
+	Controller.m_iICUDebugOverlays = nil
 
 	-- In the Base and Sandbox gamemodes this will setup their
 	-- model, skin, bodygroups and colors. If you're using this

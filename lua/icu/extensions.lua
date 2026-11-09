@@ -2,6 +2,9 @@ AddCSLuaFile()
 
 --- @class Player
 --- @field m_bICUAvoidPlayers boolean|nil
+--- @field m_iICUFlags number|nil
+--- @field m_iICUEFlags number|nil
+--- @field m_iICUDebugOverlays number|nil
 local _PLAYER = FindMetaTable("Player")
 
 --- @param Type number
@@ -42,4 +45,14 @@ end
 --- @return boolean
 function _PLAYER:IsICUTargeted()
 	return self:GetICUController() ~= NULL
+end
+
+--- @return number
+function _PLAYER:GetDebugOverlays()
+	return self:GetInternalVariable("m_debugoverlays")
+end
+
+--- @param Overlays number
+function _PLAYER:SetDebugOverlays(Overlays)
+	self:SetSaveValue("m_debugoverlays", Overlays)
 end
