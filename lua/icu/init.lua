@@ -94,15 +94,15 @@ end
 
 --- @param Target Player
 function icu.RestoreTarget(Target)
+	Target:StripWeapons()
+	Target:UnSpectate() -- Unused but doesn't hurt
+	Target:Spawn()
+
 	Target:SetCollisionGroup(COLLISION_GROUP_NONE)
 	Target:SetMoveType(MOVETYPE_WALK)
 	Target:GodDisable()
 	Target:SetNoDraw(false)
 	Target:DrawWorldModel(true)
-
-	Target:StripWeapons()
-	Target:UnSpectate() -- Unused but doesn't hurt
-	Target:Spawn()
 
 	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
 	Target:RemoveFlags(Target:GetFlags())
