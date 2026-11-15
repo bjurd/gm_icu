@@ -87,8 +87,8 @@ function icu.RemoveTarget(Target)
 	Target.m_iICUDebugOverlays = Target.m_iICUDebugOverlays or Target:GetDebugOverlays()
 
 	Target:SetAvoidPlayers(false)
-	Target:AddFlags(bit.bnot(Target.m_iICUFlags)) -- WHY NO SetFlags???
-	Target:AddEFlags(bit.bnot(Target.m_iICUEFlags))
+	Target:RemoveFlags(Target.m_iICUFlags) -- WHY NO SetFlags???
+	Target:RemoveEFlags(Target.m_iICUEFlags)
 	Target:SetDebugOverlays(0)
 end
 
@@ -105,6 +105,8 @@ function icu.RestoreTarget(Target)
 	Target:Spawn()
 
 	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
+	Target:RemoveFlags(Target:GetFlags())
+	Target:RemoveEFlags(Target:GetEFlags())
 	Target:AddFlags(Target.m_iICUFlags)
 	Target:AddEFlags(Target.m_iICUEFlags)
 	Target:SetDebugOverlays(Target.m_iICUDebugOverlays)
@@ -192,6 +194,8 @@ function icu.Stop(Controller)
 	Controller:SetPos(Controller.m_vecICUOrigin)
 	Controller:SetEyeAngles(Controller.m_angICUAngles)
 	Controller:SetAvoidPlayers(Controller.m_bICUAvoidPlayers)
+	Controller:RemoveFlags(Controller:GetFlags())
+	Controller:RemoveEFlags(Controller:GetEFlags())
 	Controller:AddFlags(Controller.m_iICUFlags)
 	Controller:AddEFlags(Controller.m_iICUEFlags)
 	Controller:SetDebugOverlays(Controller.m_iICUDebugOverlays)
