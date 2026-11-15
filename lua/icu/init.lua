@@ -162,10 +162,10 @@ function icu.Start(Controller, Target)
 	end
 
 	Controller:SetICUTarget(Target)
+	icu.SetupController(Controller, Target)
+
 	Controller:SetPos(Target:GetPos()) -- Go to
 	Controller:SetEyeAngles(Target:EyeAngles())
-
-	icu.SetupController(Controller, Target)
 
 	Controller:PrintMessageFmt(HUD_PRINTTALK, "Now controlling %s", Target:Nick())
 end
