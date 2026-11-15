@@ -94,9 +94,13 @@ end
 
 --- @param Target Player
 function icu.RestoreTarget(Target)
+	print(Target, Target:HasGodMode())
+
 	Target:StripWeapons()
 	Target:UnSpectate() -- Unused but doesn't hurt
 	Target:Spawn()
+
+	print(Target, Target:HasGodMode())
 
 	Target:SetCollisionGroup(COLLISION_GROUP_NONE)
 	Target:SetMoveType(MOVETYPE_WALK)
@@ -104,12 +108,16 @@ function icu.RestoreTarget(Target)
 	Target:SetNoDraw(false)
 	Target:DrawWorldModel(true)
 
+	print(Target, Target:HasGodMode())
+
 	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
 	Target:RemoveFlags(Target:GetFlags())
 	Target:RemoveEFlags(Target:GetEFlags())
 	Target:AddFlags(Target.m_iICUFlags)
 	Target:AddEFlags(Target.m_iICUEFlags)
 	Target:SetDebugOverlays(Target.m_iICUDebugOverlays)
+
+	print(Target, Target:HasGodMode())
 
 	Target.m_vecICUOrigin = nil
 	Target.m_angICUAngles = nil
