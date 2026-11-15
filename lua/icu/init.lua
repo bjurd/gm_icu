@@ -73,18 +73,18 @@ function icu.RemoveTarget(Target)
 		Target:Spawn() -- So things make a bit of sense when you begin controlling someone who's dead
 	end
 
-	Target:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
-	Target:SetMoveType(MOVETYPE_NOCLIP)
-	Target:GodEnable()
-	Target:SetNoDraw(true)
-	Target:DrawWorldModel(false)
-
 	Target.m_vecICUOrigin = Target.m_vecICUOrigin or Target:GetPos()
 	Target.m_angICUAngles = Target.m_angICUAngles or Target:EyeAngles()
 	Target.m_bICUAvoidPlayers = Target.m_bICUAvoidPlayers or Target:GetAvoidPlayers()
 	Target.m_iICUFlags = Target.m_iICUFlags or Target:GetFlags()
 	Target.m_iICUEFlags = Target.m_iICUEFlags or Target:GetEFlags()
 	Target.m_iICUDebugOverlays = Target.m_iICUDebugOverlays or Target:GetDebugOverlays()
+
+	Target:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
+	Target:SetMoveType(MOVETYPE_NOCLIP)
+	Target:GodEnable()
+	Target:SetNoDraw(true)
+	Target:DrawWorldModel(false)
 
 	Target:SetAvoidPlayers(false)
 	Target:RemoveFlags(Target.m_iICUFlags) -- WHY NO SetFlags???
@@ -94,13 +94,9 @@ end
 
 --- @param Target Player
 function icu.RestoreTarget(Target)
-	print(Target, Target:HasGodMode())
-
 	Target:StripWeapons()
 	Target:UnSpectate() -- Unused but doesn't hurt
 	Target:Spawn()
-
-	print(Target, Target:HasGodMode())
 
 	Target:SetCollisionGroup(COLLISION_GROUP_NONE)
 	Target:SetMoveType(MOVETYPE_WALK)
@@ -108,16 +104,12 @@ function icu.RestoreTarget(Target)
 	Target:SetNoDraw(false)
 	Target:DrawWorldModel(true)
 
-	print(Target, Target:HasGodMode())
-
 	Target:SetAvoidPlayers(Target.m_bICUAvoidPlayers)
 	Target:RemoveFlags(Target:GetFlags())
 	Target:RemoveEFlags(Target:GetEFlags())
 	Target:AddFlags(Target.m_iICUFlags)
 	Target:AddEFlags(Target.m_iICUEFlags)
 	Target:SetDebugOverlays(Target.m_iICUDebugOverlays)
-
-	print(Target, Target:HasGodMode())
 
 	Target.m_vecICUOrigin = nil
 	Target.m_angICUAngles = nil
@@ -130,19 +122,19 @@ end
 --- @param Controller Player
 --- @param Target Player
 function icu.SetupController(Controller, Target)
-	-- Make them look the same
-	-- Except bodygroups, fuck that
-	Controller:SetModel(Target:GetModel() --[[@as string]])
-	Controller:SetSkin(Target:GetSkin())
-	Controller:SetWeaponColor(Target:GetWeaponColor())
-	Controller:SetPlayerColor(Target:GetPlayerColor())
-
 	Controller.m_vecICUOrigin = Controller.m_vecICUOrigin or Controller:GetPos()
 	Controller.m_angICUAngles = Controller.m_angICUAngles or Controller:EyeAngles()
 	Controller.m_bICUAvoidPlayers = Controller.m_bICUAvoidPlayers or Controller:GetAvoidPlayers()
 	Controller.m_iICUFlags = Controller.m_iICUFlags or Controller:GetFlags()
 	Controller.m_iICUEFlags = Controller.m_iICUEFlags or Controller:GetEFlags()
 	Controller.m_iICUDebugOverlays = Controller.m_iICUDebugOverlays or Controller:GetDebugOverlays()
+
+	-- Make them look the same
+	-- Except bodygroups, fuck that
+	Controller:SetModel(Target:GetModel() --[[@as string]])
+	Controller:SetSkin(Target:GetSkin())
+	Controller:SetWeaponColor(Target:GetWeaponColor())
+	Controller:SetPlayerColor(Target:GetPlayerColor())
 
 	Controller:SetAvoidPlayers(false)
 end
